@@ -5,12 +5,23 @@ import { Question, QuestionType } from "./interfaces/question";
  * `expected` should be empty strings, the `options` should be an empty list, the `points`
  * should default to 1, and `published` should default to false.
  */
+
+/*Question {id: number,name: string,body: string,type: QuestionType,options: string[],expected: string,points: number,published: boolean} */
 export function makeBlankQuestion(
     id: number,
     name: string,
-    type: QuestionType
+    type: QuestionType,
 ): Question {
-    return {};
+    return {
+        id: id,
+        name: name,
+        type: type,
+        body: "",
+        expected: "",
+        options: [],
+        points: 1,
+        published: false,
+    };
 }
 
 /**
@@ -21,7 +32,9 @@ export function makeBlankQuestion(
  * HINT: Look up the `trim` and `toLowerCase` functions.
  */
 export function isCorrect(question: Question, answer: string): boolean {
-    return false;
+    return (
+        question.expected.toLowerCase().trim() === answer.toLowerCase().trim()
+    );
 }
 
 /**
@@ -31,7 +44,9 @@ export function isCorrect(question: Question, answer: string): boolean {
  * be exactly one of the options.
  */
 export function isValid(question: Question, answer: string): boolean {
-    return false;
+    if (question.type === "short_answer_question") return true;
+
+    return question.options.includes(answer);
 }
 
 /**
@@ -41,7 +56,7 @@ export function isValid(question: Question, answer: string): boolean {
  * name "My First Question" would become "9: My First Q".
  */
 export function toShortForm(question: Question): string {
-    return "";
+    return `${question.id}: ${question.name.substring(0, 10)}`;
 }
 
 /**
@@ -62,7 +77,15 @@ export function toShortForm(question: Question): string {
  * Check the unit tests for more examples of what this looks like!
  */
 export function toMarkdown(question: Question): string {
-    return "";
+    let ret: string = `# ${question.name}\n${question.body}`;
+    if (question.type === "multiple_choice_question") {
+        const multiBody: string = question.options
+            .map((option: string): string => `\n- ${option}`)
+            .join("");
+
+        return `${ret}${multiBody}`;
+    }
+    return ret;
 }
 
 /**
@@ -70,7 +93,13 @@ export function toMarkdown(question: Question): string {
  * `newName`.
  */
 export function renameQuestion(question: Question, newName: string): Question {
-    return question;
+    const nName: Question = {
+        ...question,
+        name: newName,
+        options: [...question.options],
+    };
+
+    return nName;
 }
 
 /**
@@ -79,7 +108,13 @@ export function renameQuestion(question: Question, newName: string): Question {
  * published; if it was published, now it should be not published.
  */
 export function publishQuestion(question: Question): Question {
-    return question;
+    const inverted: Question = {
+        ...question,
+        options: [...question.options],
+        published: !question.published,
+    };
+
+    return inverted;
 }
 
 /**
@@ -89,7 +124,14 @@ export function publishQuestion(question: Question): Question {
  * The `published` field should be reset to false.
  */
 export function duplicateQuestion(id: number, oldQuestion: Question): Question {
-    return oldQuestion;
+    const duplicate: Question = {
+        ...oldQuestion,
+        options: [...oldQuestion.options],
+        published: false,
+        id: id,
+        name: `Copy of ${oldQuestion.name}`,
+    };
+    return duplicate;
 }
 
 /**
@@ -100,7 +142,11 @@ export function duplicateQuestion(id: number, oldQuestion: Question): Question {
  * Check out the subsection about "Nested Fields" for more information.
  */
 export function addOption(question: Question, newOption: string): Question {
-    return question;
+    const moreOptions: Question = {
+        ...question,
+        options: [...question.options, newOption],
+    };
+    return moreOptions;
 }
 
 /**
@@ -115,7 +161,16 @@ export function mergeQuestion(
     id: number,
     name: string,
     contentQuestion: Question,
-    { points }: { points: number }
+    { points }: { points: number },
 ): Question {
-    return contentQuestion;
+    return {
+        id: id,
+        name: name,
+        points: points,
+        body: contentQuestion.body,
+        type: contentQuestion.type,
+        options: [...contentQuestion.options],
+        expected: contentQuestion.expected,
+        published: false,
+    };
 }
