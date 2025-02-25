@@ -44,7 +44,7 @@ export function isCorrect(question: Question, answer: string): boolean {
 export function isValid(question: Question, answer: string): boolean {
     if (question.type == "short_answer_question") {
         return true;
-    } else if (question.type == "multiple_choice_question") {
+    } else {
         for (let i = 0; i < question.options.length; i++) {
             if (answer == question.options[i]) {
                 return true;
