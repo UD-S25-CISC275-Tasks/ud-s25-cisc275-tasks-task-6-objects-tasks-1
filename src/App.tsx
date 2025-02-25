@@ -8,7 +8,7 @@ import {
     addScore,
     calculateAverage,
     createStudentRecord,
-} from "./objects"; 
+} from "./objects";
 
 function App() {
     console.log(
