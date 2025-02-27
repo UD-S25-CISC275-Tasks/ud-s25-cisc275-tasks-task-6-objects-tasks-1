@@ -172,7 +172,12 @@ export function addOption(question: Question, newOption: string): Question {
  * field; but the function call would be the same as if it were a `Question` type!
  * done
  */
-export function mergeQuestion(id, name, contentQuestion, secondQuestion) {
+export function mergeQuestion(
+    id: number,
+    name: string,
+    contentQuestion: Question,
+    secondQuestion: Question,
+) {
     return {
         id,
         name,
